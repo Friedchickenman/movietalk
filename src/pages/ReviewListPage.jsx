@@ -85,13 +85,76 @@ const ReviewListPage = () => {
         }
         }
   };
+  
+  //  수정 버튼 클릭 시 수정 페이지로 이동하는 함수 추가 
+  const handleEdit = (review) => {
+    // navigate 함수를 사용하여 '/reviews/:rno/edit' 경로로 이동 (rno는 리뷰 번호)
+    navigate(`/reviews/${review.rno}/edit`);
+  };
 
     // 컴포넌트가 화면에 보여줄 내용을 반환합니다.
-    return (
-        <div className="review-list-page">
-            <h1>리뷰 목록</h1>
-        </div>
-    );
+     // 로딩 중 또는 에러 발생 시 보여줄 JSX
+  if (loading) {
+    return <div>리뷰 목록을 불러오는 중입니다...</div>;
+  }
+
+  if (error) {
+    return <div className="text-red-500">오류 발생: {error}</div>;
+  }
+
+  // 모든 준비가 되면 보여줄 JSX (리뷰 목록 )
+  return (
+    <div className="space-y-4"> {/* 리뷰 목록 전체 컨테이너 */}
+      <h2 className="text-xl font-bold">리뷰 목록</h2> {/* 목록 제목 */}
+
+      {/* 새 리뷰 작성 페이지로 이동하는 버튼 */}
+    <button
+       onClick={() => navigate('/reviews/new')} // 버튼 클릭 시 /reviews/new 경로로 이동
+       className="mb-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+     >
+       새 리뷰 작성
+     </button>
+      
+      {reviews.length === 0 ? (
+        <div>등록된 리뷰가 없습니다.</div>
+      ) : (
+        // 리뷰 목록을 순회하며 각 리뷰를 화면에 표시
+        reviews.map((review) => (
+          <div key={review.rno} className="border rounded-lg p-4 shadow"> {/* 개별 리뷰 아이템 */}
+            {/* 리뷰 아이템 내용 */}
+            {review.imageUrl && (
+              <div className="flex justify-center mb-4">
+                <img
+                  src={review.imageUrl}
+                  alt={`${review.movieTitle} 포스터`}
+                  className="w-32 h-48 object-cover rounded"
+                />
+              </div>
+            )}
+            <h3 className="text-lg font-semibold">{review.movieTitle}</h3>
+            <p><span className="font-medium">작성자:</span> {review.reviewer}</p>
+            <p><span className="font-medium">내용:</span> {review.content}</p>
+            <p><span className="font-medium">평점:</span> {review.grade}</p>
+
+            {/* 수정 및 삭제 버튼 */}
+             <button
+               onClick={() => handleEdit(review)} // 아직 handleEdit 함수는 정의되지 않았습니다.
+               className="mt-2 px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 mr-2"
+             >
+               수정
+             </button>
+            <button
+              onClick={() => handleDelete(review.rno)} // 삭제 버튼 클릭 시 handleDelete 호출
+              className="mt-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+            >
+              삭제
+            </button>
+
+          </div>
+        ))
+      )}
+    </div>
+  );
 };
 
 export default ReviewListPage;
