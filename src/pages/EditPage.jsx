@@ -52,13 +52,74 @@ const EditPage = () => {
 
   }, [rno]); // 의존성 배열에 rno를 넣어 rno 값이 바뀔 때마다 다시 데이터를 가져오도록 합니다. (보통 수정 페이지에서는 rno가 바뀌지 않지만, 안전을 위해 포함)
 
+const handleUpdateReview = async (reviewData) => { // ReviewForm으로부터 수정된 리뷰 데이터를 인자로 받습니다.
+    // reviewData 객체에는 수정된 작성자, 내용, 평점 등이 포함되어 있습니다.
+    // 리뷰 번호(rno)는 URL 파라미터에서 얻은 rno 값을 사용합니다. ReviewForm에서는 받아오지 않을 수 있습니다.
+
+    try {
+      // 백엔드의 리뷰 수정 엔드포인트 호출 - 수정할 리뷰의 rno를 URL에 포함
+      // reviewData 객체에 rno가 포함되어 있다면 put의 두 번째 인자로 넘길 때 확인 필요. 보통은 URL에 포함
+      await axios.put(`http://192.168.0.102:8080/api/reviews/${rno}`, reviewData); // 백엔드 API 주소/포트 확인!
+      console.log(`리뷰 수정 완료 (rno: ${rno})`); // 콘솔 출력
+
+      alert("리뷰 수정 완료!"); // 사용자에게 성공 알림
+
+      // 수정 성공 후 리뷰 목록 페이지로 이동 
+      navigate('/'); // 루트 경로인 리뷰 목록 페이지로 이동합니다. (또는 '/reviews' 경로)
+
+    } catch (error) {
+      console.error(`리뷰 수정 실패 (rno: ${rno})`, error);
+      alert(`리뷰 수정에 실패했습니다. 오류: ${error.message}`); // 사용자에게 실패 알림 (에러 메시지 포함)
+      // 실패 시에는 페이지 이동을 하지 않거나 다른 처리를 할 수 있습니다.
+      throw error; // ReviewForm에서 에러를 잡을 수 있도록 다시 던져줄 수도 있습니다.
+    }
+  };
 
 
-    return (
-        <div>
-            <div classNAme="editPage"></div>
-            <h1>리뷰 수정</h1>
+  // 로딩 중 또는 에러 발생 시 보여줄 
+  // 로딩 상태일 때
+  if (loading) {
+    return <div>리뷰 정보를 불러오는 중입니다...</div>;
+  }
+
+  // 에러 상태일 때
+  if (error) {
+    return <div className="text-red-500">오류 발생: {error}</div>;
+  }
+
+  // 리뷰 수정 폼
+  return (
+    <div className="edit-page"> {/* 페이지 전체를 감싸는 div */}
+      <h1>리뷰 수정</h1> {/* 페이지 제목 */}
+
+      {/* editingReview 상태에 데이터가 있을 때만 ReviewForm을 보여줍니다. */}
+      {/* 데이터를 가져오기 전(null)이거나 에러 발생 시에는 폼을 보여주지 않습니다. */}
+      {editingReview && ( // editingReview 상태가 null이 아닐 때 (데이터를 성공적으로 가져왔을 때)
+        <div className="review-form-container"> {/* ReviewForm을 감싸는 컨테이너 (스타일링 용도) */}
+           {/* ReviewForm 컴포넌트에 필요한 props 전달 (수정 모드) */}
+          <ReviewForm
+            // editingReview prop으로 백엔드에서 가져온 기존 리뷰 정보를 전달
+            editingReview={editingReview}
+            // handleAddReview, selectedMovie, setSelectedMovie는 수정 페이지에서 필요 없습니다.
+
+            // 사용자가 폼 수정을 완료하고 제출할 때 호출될 함수를 handleUpdateReview prop으로 전달
+            handleUpdateReview={handleUpdateReview}
+            // ReviewForm 내부에서 취소 시 호출할 함수를 setEditingReview prop으로 전달 (null로 만들어 폼 숨김)
+            setEditingReview={setEditingReview} // 취소 버튼 기능 구현 시 사용 (EditPage에서는 setEditingReview(null)하면 폼이 사라짐)
+             // ReviewForm 내부에서 취소 버튼 클릭 시 navigate('/') 호출하도록 구현하는 것도 가능
+          />
+          {/* 취소 버튼을 여기에 직접 추가할 수도 있습니다. */}
+          {/* <button onClick={() => setEditingReview(null)}>취소</button> */}
         </div>
+      )}
+
+       {/* editingReview 상태가 null이고, 로딩 중도 아니고, 에러도 없을 경우 메시지 (예: 리뷰를 찾을 수 없습니다) */}
+       {!editingReview && !loading && !error && (
+         <div>수정할 리뷰 정보를 찾을 수 없습니다.</div>
+       )}
+
+
+    </div>
     );
 };
 
