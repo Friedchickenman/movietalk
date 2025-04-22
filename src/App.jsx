@@ -20,7 +20,7 @@ function App() {
 
         <Routes>
 
-          <Route path="/" element={<ReviewListPage />} />
+          <Route path="/reviews" element={<ReviewListPage />} />
 
 
           <Route path="/reviews/new" element={<AddReviewPage />} />
