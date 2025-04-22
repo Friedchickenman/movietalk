@@ -27,7 +27,7 @@ const AddReviewPage = () => {
       alert("리뷰가 등록되었습니다!"); // 사용자에게 성공 알림
 
       // 등록 성공 후 리뷰 목록 페이지로 이동 
-      navigate('/'); // 루트 경로인 리뷰 목록 페이지로 이동
+      navigate('/reviews'); // 루트 경로인 리뷰 목록 페이지로 이동
 
     } catch (error) {
       console.error("리뷰 등록 실패", error);
@@ -62,7 +62,7 @@ const AddReviewPage = () => {
         <div className="movie-search-container"> {/* MovieSearch를 감싸는 컨테이너 (스타일링 용도) */}
           {/* MovieSearch 컴포넌트에 필요한 props 전달 */}
           {/* MovieSearch가 영화를 선택했을 때 호출할 함수를 setSelectedMovie prop으로 전달 */}
-          <MovieSearch setSelectedMovie={setSelectedMovie} />
+          <MovieSearch onMovieSelect={setSelectedMovie} />
         </div>
       )}
 
