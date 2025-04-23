@@ -65,7 +65,7 @@ const handleUpdateReview = async (reviewData) => { // ReviewForm으로부터 수
       alert("리뷰 수정 완료!"); // 사용자에게 성공 알림
 
       // 수정 성공 후 리뷰 목록 페이지로 이동 
-      navigate('/'); // 루트 경로인 리뷰 목록 페이지로 이동합니다. (또는 '/reviews' 경로)
+      navigate('/reviews'); // 루트 경로인 리뷰 목록 페이지로 이동합니다. (또는 '/reviews' 경로)
 
     } catch (error) {
       console.error(`리뷰 수정 실패 (rno: ${rno})`, error);

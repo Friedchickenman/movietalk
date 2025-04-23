@@ -71,14 +71,14 @@ const ReviewListPage = () => {
 
   // 리뷰 삭제 핸들러 함수 추가
   const handleDelete = async (rno) => {
-    if (window.confirm("정말 이 리뷰를 삭제하시겠습니깡?")) {// 삭제 여부를 다시 한번 확인하는는 팝업 
+    if (window.confirm("정말 이 리뷰를 삭제하시겠습니까?")) {// 삭제 여부를 다시 한번 확인하는는 팝업 
         try{
             // 백엔드 삭제 API 호출 - 삭제할 리뷰의 rno를 URL에 포함
             await axios.delete(`http://192.168.0.102:8080/api/reviews/${rno}`);
             // 백엔드에서 삭제 성공시:
             // 현재 reviews 상태에서 해당 rno를 가진 리뷰를 제거하여 UI 즉시 업데이트
             setReviews((prevReviews) => prevReviews.filter((review) => review.rno !== rno));
-            alert("리뷰가 삭제되었습니닷!"); // 삭제 성공 알림
+            alert("리뷰가 삭제되었습니다!"); // 삭제 성공 알림
         } catch (error) {
             console.error("리뷰 삭제가 실패되었습니다", error);
             alert(`리뷰 삭제에 실패했습니다! 오류: ${error.message}`); // 삭제 실패 알림
