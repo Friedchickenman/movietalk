@@ -15,7 +15,7 @@ const ReviewListPage = () => {
     //라우팅 이동을 위한 useNavigate 훅 사용
     const navigate = useNavigate();
 
-     //백엔드에서 리뷰 목록을 가져오는 함수 (기존 ReviewList에서 가져옴) 
+     //백엔드에서 리뷰 목록을 가져오는 함수 
   const fetchReviews = async () => {
     setLoading(true); // 로딩 시작
     setError(null); // 이전 에러 초기화
@@ -25,7 +25,7 @@ const ReviewListPage = () => {
 
       const reviewList = response.data;
 
-      // TMDb에서 포스터 정보를 가져와 리뷰 데이터에 추가 (주의: 이 부분은 비효율적일 수 있습니다.)
+      // TMDb에서 포스터 정보를 가져와 리뷰 데이터에 추가 
       const updatedReviews = await Promise.all(
         reviewList.map(async (review) => {
            try {
